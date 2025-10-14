@@ -1,0 +1,32 @@
+# xhost +local:root
+
+services:
+  ros2_jazzy:
+    build: .
+    container_name: lecture_container
+    network_mode: host
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./src:/home/ros2_ws/src
+    stdin_open: true
+    tty: true
+
+# services:
+#   ros2_jazzy:
+#     build: .
+#     container_name: lecture_container
+#     privileged: true
+#     environment:
+#       - DISPLAY=host.docker.internal:0
+#       - QT_X11_NO_MITSHM=1
+#       - LIBGL_ALWAYS_INDIRECT=0
+#     volumes:
+#       - ./src:/home/ros2_ws/src
+#     extra_hosts:
+#       - "host.docker.internal:host-gateway"
+#     stdin_open: true
+#     tty: true
