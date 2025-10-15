@@ -1,0 +1,23 @@
+{
+    "name": "lecture_container",
+    "workspaceFolder": "/home/ros2_ws",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "ros2_jazzy",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-vscode.cpptools-extension-pack",
+                "xaver.clang-format",
+                "pkief.material-icon-theme",
+                "ranch-hand-robotics.rde-ros-2",
+                "ranch-hand-robotics.urdf-editor",
+                "dotjoshjohnson.xml",
+                "ms-ceintl.vscode-language-pack-ja"
+            ]
+        }
+    }
+}
