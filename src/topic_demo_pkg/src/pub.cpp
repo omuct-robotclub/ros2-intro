@@ -11,7 +11,10 @@ using namespace std::chrono_literals;
 class SerialTalker : public rclcpp::Node {
  public:
   SerialTalker() : Node("serial_talker"), count_(0) {
-    cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&SerialTalker::cmd_vel_callback, this, std::placeholders::_1));
+    this->declare_parameter<std::string>("mode", "timer");
+    std::string mode = this->get_parameter("mode").as_string();
+    if (mode == "cmd")
+      cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&SerialTalker::cmd_vel_callback, this, std::placeholders::_1));
     string_pub_ = this->create_publisher<std_msgs::msg::String>("demo_topic", 10);
     auto timer_callback =
         [this]() -> void {
@@ -20,7 +23,8 @@ class SerialTalker : public rclcpp::Node {
       RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       this->string_pub_->publish(message);
     };
-    timer_ = this->create_wall_timer(500ms, timer_callback);
+    if (mode == "timer")
+      timer_ = this->create_wall_timer(500ms, timer_callback);
   }
 
  private:
