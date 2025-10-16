@@ -1,0 +1,59 @@
+slam_toolbox:
+  ros__parameters:
+    odom_frame: odom 
+    map_frame: map
+    base_frame: base_link
+    scan_topic: "scan"
+
+    mode: mapping
+
+    # 推定更新感度（0だと移動していなくとも更新が入る）
+    minimum_travel_distance: 0.0   
+    minimum_travel_heading: 0.0   
+    
+    # TF 更新頻度（小さくするとより高頻度でpublish）
+    transform_publish_period: 0.1  # 20Hz
+    transform_timeout: 0.5
+    tf_buffer_duration: 10.0
+
+    # スキャン処理
+    scan_buffer_size: 20            # 過去スキャンを多めに保持
+    throttle_scans: 1               # 全スキャンを使用
+
+    # スキャンマッチングの厳格化（精度優先）
+    link_match_minimum_response_fine: 0.3
+    link_match_minimum_response_coarse: 0.25
+    loop_match_minimum_response_fine: 0.6
+    loop_match_minimum_response_coarse: 0.5
+    minimum_distance_penalty: 0.5
+    minimum_angle_penalty: 1.0
+    icp_optimization_steps: 60      # ICPの最適化ステップ数を増加
+    icp_max_correspondence_dist: 0.03  # ICPでの対応距離を短く
+
+    # レーザレンジ設定
+    min_laser_range: 0.02
+    max_laser_range: 10.0
+    use_simulated_time: true
+
+    # ループクロージング関連
+    do_loop_closing: true
+    loop_closure_search_radius: 10.0       # 大きな範囲でループ検出
+    loop_closure_minimum_score: 0.35
+    loop_closure_max_iterations: 100
+
+    # マップ解像度
+    resolution: 0.1          # 5cm刻みでマップ
+    publish_period_sec: 0.1  # 10Hzでマップ更新
+    map_update_interval: 0.01 # マップ更新間隔
+
+    # 内部バッファやヒストリー
+    submap_publish_period_sec: 0.01
+    max_submaps_to_keep: 100
+    pose_publish_period: 0.05  # 20Hzでpose publish
+
+    # その他精度向上
+    optimize_every_n_nodes: 1   # ノード毎に最適化
+    scan_matcher_angular_weight: 3.0
+    scan_matcher_linear_weight: 3.0
+    use_scan_matching: true
+    use_loop_closure: true
