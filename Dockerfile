@@ -24,6 +24,7 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-slam-toolbox \
     ros-${ROS_DISTRO}-navigation2 \
     ros-${ROS_DISTRO}-nav2-bringup \
+    ros-${ROS_DISTRO}-nav2-route \
     ros-${ROS_DISTRO}-pcl-ros \
     ros-${ROS_DISTRO}-pointcloud-to-laserscan \
     ros-dev-tools
