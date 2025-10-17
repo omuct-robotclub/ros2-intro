@@ -4,9 +4,9 @@
 
 namespace points_processes {
 
-sensor_msgs::msg::LaserScan pointcloud2ToLaserScan(const sensor_msgs::msg::PointCloud2 &cloud);
+sensor_msgs::msg::LaserScan pointcloud2ToLaserScan(const sensor_msgs::msg::PointCloud2& cloud);
 
-PointIntegration::PointIntegration(const rclcpp::NodeOptions &options) : Node("points_integration", options) {
+PointIntegration::PointIntegration(const rclcpp::NodeOptions& options) : Node("points_integration", options) {
   this->declare_parameter<std::vector<std::string>>("scan_topic_names", std::vector<std::string>());
   this->declare_parameter<std::string>("merged_topic_name", "merged_scan");
   this->declare_parameter<std::string>("merged_frame_id", "base_link");
@@ -23,18 +23,18 @@ PointIntegration::PointIntegration(const rclcpp::NodeOptions &options) : Node("p
   callback_group_ = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
   rclcpp::SubscriptionOptions sub_options;
   sub_options.callback_group = callback_group_;
-  for (const std::string &topic : scan_topic_names) {
+  for (const std::string& topic : scan_topic_names) {
     auto callback = [this, topic](sensor_msgs::msg::LaserScan::ConstSharedPtr msg) { scan_callback(topic, msg); };
     auto subscription = this->create_subscription<sensor_msgs::msg::LaserScan>(topic, rclcpp::SensorDataQoS{}, std::move(callback), sub_options);
     subscriptions_.push_back(subscription);
   }
 }
 
-void PointIntegration::scan_callback(const std::string &topic_name, sensor_msgs::msg::LaserScan::ConstSharedPtr msg) {
+void PointIntegration::scan_callback(const std::string& topic_name, sensor_msgs::msg::LaserScan::ConstSharedPtr msg) {
   auto tfed_points = std::make_shared<sensor_msgs::msg::PointCloud2>();
   try {
     projector_.transformLaserScanToPointCloud(merged_frame_id, *msg, *tfed_points, *tf_buffer_);
-  } catch (tf2::TransformException &ex) {
+  } catch (tf2::TransformException& ex) {
     RCLCPP_WARN(this->get_logger(), "Transform error: %s", ex.what());
     return;
   }
@@ -49,14 +49,14 @@ void PointIntegration::send_merged_scan() {
   }
   auto merged_points = std::make_shared<sensor_msgs::msg::PointCloud2>();
   pcl::PointCloud<pcl::PointXYZ> merged_cloud_pcl;
-  for (const auto &pair : scans_) {
+  for (const auto& pair : scans_) {
     sensor_msgs::msg::PointCloud2::SharedPtr scan = pair.second;
     pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
     pcl::fromROSMsg(*scan, pcl_cloud);
     pcl_cloud = resampler(pcl_cloud);  // 点群のリサンプリング
     pcl_cloud = resampler(pcl_cloud);
-    pcl_cloud = resampler(pcl_cloud);  // 回数を重ねて精度を上げる
-    merged_cloud_pcl += pcl_cloud;     // 点群の統合
+    // pcl_cloud = resampler(pcl_cloud);  // 回数を重ねて精度を上げる
+    merged_cloud_pcl += pcl_cloud;  // 点群の統合
   }
   pcl::toROSMsg(merged_cloud_pcl, *merged_points);
   merged_points->header.frame_id = merged_frame_id;
@@ -65,7 +65,7 @@ void PointIntegration::send_merged_scan() {
   // laser_scan_publisher_->publish(pointcloud2ToLaserScan(*merged_points));
 }
 
-bool PointIntegration::point_inserter(const pcl::PointXYZ &point, const pcl::PointXYZ &pre_point, pcl::PointXYZ &new_point, bool &inserted) {
+bool PointIntegration::point_inserter(const pcl::PointXYZ& point, const pcl::PointXYZ& pre_point, pcl::PointXYZ& new_point, bool& inserted) {
   float dx = point.x - pre_point.x;
   float dy = point.y - pre_point.y;
   float point_distance = sqrt(dx * dx + dy * dy);
@@ -85,7 +85,7 @@ bool PointIntegration::point_inserter(const pcl::PointXYZ &point, const pcl::Poi
   return true;
 }
 
-pcl::PointCloud<pcl::PointXYZ> PointIntegration::resampler(const pcl::PointCloud<pcl::PointXYZ> &target_points) {
+pcl::PointCloud<pcl::PointXYZ> PointIntegration::resampler(const pcl::PointCloud<pcl::PointXYZ>& target_points) {
   pcl::PointCloud<pcl::PointXYZ> resampled_points;  // 修正後の点群
   if (target_points.points.empty())
     return resampled_points;  // 空ならそのまま返す
@@ -117,7 +117,7 @@ pcl::PointCloud<pcl::PointXYZ> PointIntegration::resampler(const pcl::PointCloud
   return resampled_points;
 }
 
-sensor_msgs::msg::LaserScan pointcloud2ToLaserScan(const sensor_msgs::msg::PointCloud2 &cloud) {
+sensor_msgs::msg::LaserScan pointcloud2ToLaserScan(const sensor_msgs::msg::PointCloud2& cloud) {
   sensor_msgs::msg::LaserScan scan;
 
   // LaserScanの設定

@@ -24,16 +24,16 @@ namespace points_processes {
 
 class PointIntegration : public rclcpp::Node {
  public:
-  PointIntegration(const rclcpp::NodeOptions &options);
+  PointIntegration(const rclcpp::NodeOptions& options);
 
  private:
-  void scan_callback(const std::string &topic_name, sensor_msgs::msg::LaserScan::ConstSharedPtr msg);
+  void scan_callback(const std::string& topic_name, sensor_msgs::msg::LaserScan::ConstSharedPtr msg);
   void send_merged_scan();
-  pcl::PointCloud<pcl::PointXYZ> resampler(const pcl::PointCloud<pcl::PointXYZ> &target_points);
-  bool point_inserter(const pcl::PointXYZ &point, const pcl::PointXYZ &pre_point, pcl::PointXYZ &new_point, bool &inserted);
+  pcl::PointCloud<pcl::PointXYZ> resampler(const pcl::PointCloud<pcl::PointXYZ>& target_points);
+  bool point_inserter(const pcl::PointXYZ& point, const pcl::PointXYZ& pre_point, pcl::PointXYZ& new_point, bool& inserted);
 
-  double equalization_point_dis = 0.03;
-  double point_dis_threshold = 0.10;
+  double equalization_point_dis = 0.2;
+  double point_dis_threshold = 0.5;
   double total_dis;
 
   std::vector<std::string> scan_topic_names;

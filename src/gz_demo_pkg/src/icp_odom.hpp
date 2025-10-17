@@ -27,7 +27,7 @@ namespace icp_odom {
 
 class IcpOdom : public rclcpp::Node {
  public:
-  IcpOdom(const rclcpp::NodeOptions &options);
+  IcpOdom(const rclcpp::NodeOptions& options);
 
  private:
   void scan_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg);
@@ -42,10 +42,6 @@ class IcpOdom : public rclcpp::Node {
 
   ICP icp_dev;
   rclcpp::Time start_time_;
-
-  double equalization_point_dis = 0.05;
-  double point_dis_threshold = 0.20;
-  double total_dis;
 
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr scan_sub_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;

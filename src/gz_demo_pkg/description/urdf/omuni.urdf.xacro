@@ -105,7 +105,7 @@
                 <ray>
                     <scan>
                         <horizontal>
-                            <samples>360</samples>
+                            <samples>90</samples>
                             <resolution>1.000000</resolution>
                             <min_angle>${-pi/2.0-0.3}</min_angle>
                             <max_angle>${pi/2.0+0.3}</max_angle>

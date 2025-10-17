@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 class SerialTalker : public rclcpp::Node {
  public:
-  SerialTalker() : Node("serial_talker"), count_(0) {
+  SerialTalker() : Node("demo_publisher"), count_(0) {
     this->declare_parameter<std::string>("mode", "timer");
     std::string mode = this->get_parameter("mode").as_string();
     if (mode == "cmd")
